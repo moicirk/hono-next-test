@@ -1,5 +1,11 @@
+export type Company = {
+  id: string;
+  name: string;
+};
+
 export type Job = {
   id: string;
+  companyId: string;
   title: string;
   description: string;
   salaryFrom: number;
@@ -16,9 +22,17 @@ export type Application = {
   coverLetter: string;
 };
 
+export const companies: Company[] = [
+  { id: 'c1', name: 'TechCorp' },
+  { id: 'c2', name: 'DesignHub' },
+  { id: 'c3', name: 'CloudSys' },
+  { id: 'c4', name: 'QualitySoft' },
+];
+
 export const jobs: Job[] = [
   {
     id: '1',
+    companyId: 'c1',
     title: 'Senior Frontend Developer',
     description:
       'We are looking for an experienced frontend developer to join our growing product team. You will lead the development of our customer-facing web application, collaborate closely with designers, and mentor junior developers.',
@@ -28,6 +42,7 @@ export const jobs: Job[] = [
   },
   {
     id: '2',
+    companyId: 'c1',
     title: 'Backend Engineer (Node.js)',
     description:
       'Join our backend team to build scalable APIs and microservices. You will work with Node.js, PostgreSQL, and cloud infrastructure. Experience with Docker and CI/CD pipelines is a plus.',
@@ -37,6 +52,7 @@ export const jobs: Job[] = [
   },
   {
     id: '3',
+    companyId: 'c2',
     title: 'UX/UI Designer',
     description:
       'We need a creative and detail-oriented designer to craft beautiful, user-friendly interfaces. You will own the design process from wireframes to high-fidelity prototypes and work directly with engineers during implementation.',
@@ -46,6 +62,7 @@ export const jobs: Job[] = [
   },
   {
     id: '4',
+    companyId: 'c3',
     title: 'DevOps Engineer',
     description:
       'We are seeking a DevOps engineer to manage and improve our cloud infrastructure. Responsibilities include maintaining CI/CD pipelines, monitoring systems, and ensuring high availability across environments.',
@@ -55,6 +72,7 @@ export const jobs: Job[] = [
   },
   {
     id: '5',
+    companyId: 'c3',
     title: 'Product Manager',
     description:
       'As a Product Manager, you will define the product roadmap, gather requirements from stakeholders, and work cross-functionally with design and engineering to ship features that customers love.',
@@ -64,6 +82,7 @@ export const jobs: Job[] = [
   },
   {
     id: '6',
+    companyId: 'c4',
     title: 'QA Engineer',
     description:
       'We are looking for a QA Engineer to ensure the quality of our software products. You will write test plans, perform manual and automated testing, and work with developers to resolve issues quickly.',

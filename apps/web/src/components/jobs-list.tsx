@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export function JobsList({ jobs }: { jobs: Job[] }) {
+export function JobsList({ jobs, companyId }: { jobs: Job[]; companyId: string }) {
   const [query, setQuery] = useState('');
 
   const filtered = jobs.filter((job) => {
@@ -17,6 +17,8 @@ export function JobsList({ jobs }: { jobs: Job[] }) {
       job.description.toLowerCase().includes(q)
     );
   });
+
+  const base = `/companies/${companyId}/jobs`;
 
   return (
     <div className='flex flex-col gap-6'>
@@ -50,7 +52,7 @@ export function JobsList({ jobs }: { jobs: Job[] }) {
               </CardContent>
               <CardFooter>
                 <Button asChild>
-                  <Link href={`/jobs/${job.id}`}>View Details</Link>
+                  <Link href={`${base}/${job.id}`}>View Details</Link>
                 </Button>
               </CardFooter>
             </Card>
