@@ -1,6 +1,6 @@
-import { jobs } from '@/lib/data';
 import { JobsList } from '@/components/jobs-list';
 import { Button } from '@/components/ui/button';
+import { jobs } from '@/lib/data';
 import Link from 'next/link';
 
 export default function JobsPage() {

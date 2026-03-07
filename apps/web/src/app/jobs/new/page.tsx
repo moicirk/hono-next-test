@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function NewJobPage() {
   const [submitted, setSubmitted] = useState(false);

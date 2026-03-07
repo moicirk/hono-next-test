@@ -1,14 +1,10 @@
-import { applications, companies, jobs } from '@/lib/data';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { applications, companies, jobs } from '@/lib/data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export default async function JobDetailPage({
-  params,
-}: {
-  params: Promise<{ companyId: string; jobId: string }>;
-}) {
+export default async function JobDetailPage({ params }: { params: Promise<{ companyId: string; jobId: string }> }) {
   const { companyId, jobId } = await params;
   const company = companies.find((c) => c.id === companyId);
   const job = jobs.find((j) => j.id === jobId && j.companyId === companyId);
@@ -35,7 +31,7 @@ export default async function JobDetailPage({
               <p className='text-muted-foreground mt-1 text-sm'>{job.position}</p>
             </div>
             <div className='text-right'>
-              <p className='text-muted-foreground text-xs uppercase tracking-wide'>Salary</p>
+              <p className='text-muted-foreground text-xs tracking-wide uppercase'>Salary</p>
               <p className='text-lg font-semibold'>
                 ${job.salaryFrom.toLocaleString()} &ndash; ${job.salaryTo.toLocaleString()}
               </p>
@@ -50,8 +46,7 @@ export default async function JobDetailPage({
 
       <section>
         <h2 className='mb-4 text-xl font-bold'>
-          Applications{' '}
-          <span className='text-muted-foreground text-base font-normal'>({jobApplications.length})</span>
+          Applications <span className='text-muted-foreground text-base font-normal'>({jobApplications.length})</span>
         </h2>
 
         {jobApplications.length === 0 ? (

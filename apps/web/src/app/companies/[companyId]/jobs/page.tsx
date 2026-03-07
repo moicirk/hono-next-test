@@ -1,6 +1,6 @@
-import { companies, jobs } from '@/lib/data';
 import { JobsList } from '@/components/jobs-list';
 import { Button } from '@/components/ui/button';
+import { companies, jobs } from '@/lib/data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 

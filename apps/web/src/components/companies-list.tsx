@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { type Company } from '@/lib/data';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { type Company } from '@/lib/data';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export function CompaniesList({ initialCompanies }: { initialCompanies: Company[] }) {
   const [companies, setCompanies] = useState(initialCompanies);

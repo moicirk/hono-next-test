@@ -1,5 +1,5 @@
-import { companies } from '@/lib/data';
 import { CompaniesList } from '@/components/companies-list';
+import { companies } from '@/lib/data';
 
 export default function CompaniesPage() {
   return (

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { type Job } from '@/lib/data';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { type Job } from '@/lib/data';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export function JobsList({ jobs, companyId }: { jobs: Job[]; companyId: string }) {
   const [query, setQuery] = useState('');
@@ -42,7 +42,7 @@ export function JobsList({ jobs, companyId }: { jobs: Job[]; companyId: string }
                     <CardTitle className='text-lg'>{job.title}</CardTitle>
                     <CardDescription className='mt-1'>{job.position}</CardDescription>
                   </div>
-                  <span className='text-muted-foreground whitespace-nowrap text-sm font-medium'>
+                  <span className='text-muted-foreground text-sm font-medium whitespace-nowrap'>
                     ${job.salaryFrom.toLocaleString()} &ndash; ${job.salaryTo.toLocaleString()}
                   </span>
                 </div>
