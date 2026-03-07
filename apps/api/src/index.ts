@@ -2,9 +2,9 @@ import { serve } from '@hono/node-server';
 import 'dotenv/config';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { applicationsRoute } from './routes/applications.route.js';
-import { companiesRoute } from './routes/companies.route.js';
-import { jobsRoute } from './routes/jobs.route.js';
+import { applicationsRoute } from './routes/applications.js';
+import { companiesRoute } from './routes/companies.js';
+import { jobsRoute } from './routes/jobs.js';
 
 const app = new Hono()
   .use(
