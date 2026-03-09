@@ -1,9 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { HTTPException } from 'hono/http-exception';
 import { z } from 'zod';
-import { CompanyRepository } from '../repositories/company.repository.js';
-import { JobRepository } from '../repositories/job.repository.js';
+import { JobService } from '../services/job.service.js';
 
 const jobStatusEnum = z.enum(['draft', 'open', 'in_review', 'filled', 'closed']);
 
@@ -23,49 +21,25 @@ const updateSchema = z.object({
   status: jobStatusEnum.optional(),
 });
 
-async function requireCompany(companyId: number) {
-  const company = await CompanyRepository.findById(companyId);
-  if (!company) {
-    throw new HTTPException(404, { message: 'Company not found' });
-  }
-  return company;
-}
-
 export const jobsRoute = new Hono()
   .get('/', async (c) => {
     const companyId = Number(c.req.param('companyId'));
-    await requireCompany(companyId);
-    const rows = await JobRepository.findAllByCompany(companyId);
-    return c.json(rows);
+    return c.json(await JobService.findAllByCompany(companyId));
   })
 
   .get('/:id', async (c) => {
     const companyId = Number(c.req.param('companyId'));
     const id = Number(c.req.param('id'));
-    await requireCompany(companyId);
-    const row = await JobRepository.findByIdAndCompany(id, companyId);
-    if (!row) {
-      throw new HTTPException(404, { message: 'Job not found' });
-    }
-    return c.json(row);
+    return c.json(await JobService.findByIdAndCompany(id, companyId));
   })
 
   .post('/', zValidator('json', createSchema), async (c) => {
     const companyId = Number(c.req.param('companyId'));
-    await requireCompany(companyId);
-    const body = c.req.valid('json');
-    const row = await JobRepository.create({ ...body, companyId });
-    return c.json(row, 201);
+    return c.json(await JobService.create(companyId, c.req.valid('json')), 201);
   })
 
   .patch('/:id', zValidator('json', updateSchema), async (c) => {
     const companyId = Number(c.req.param('companyId'));
     const id = Number(c.req.param('id'));
-    await requireCompany(companyId);
-    const body = c.req.valid('json');
-    const row = await JobRepository.update(id, companyId, body);
-    if (!row) {
-      throw new HTTPException(404, { message: 'Job not found' });
-    }
-    return c.json(row);
+    return c.json(await JobService.update(id, companyId, c.req.valid('json')));
   });

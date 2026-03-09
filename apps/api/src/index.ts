@@ -2,12 +2,19 @@ import { serve } from '@hono/node-server';
 import 'dotenv/config';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { NotFoundException } from './exceptions/not-found.exception.js';
 import { applicationsRoute } from './routes/applications.js';
 import { clientsRoute } from './routes/clients.js';
 import { companiesRoute } from './routes/companies.js';
 import { jobsRoute } from './routes/jobs.js';
 
 const app = new Hono()
+  .onError((err, c) => {
+    if (err instanceof NotFoundException) {
+      return c.json({ message: err.message }, 404);
+    }
+    return c.json({ message: 'Internal server error' }, 500);
+  })
   .use(
     '/api/*',
     cors({
