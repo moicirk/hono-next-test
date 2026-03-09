@@ -61,4 +61,10 @@ export default tseslint.config(
       '@typescript-eslint/no-var-requires': 'off',
     },
   },
+  {
+    files: ['src/__tests__/**/*.ts'],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
 );
