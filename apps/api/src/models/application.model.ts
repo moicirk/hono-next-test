@@ -1,6 +1,7 @@
 import type { applications, clients } from '../db/schema.js';
 
-export type Application = typeof applications.$inferSelect;
+type Application = typeof applications.$inferSelect;
+
 export type ApplicationStatus = Application['status'];
 export type NewApplication = Pick<Application, 'jobId' | 'clientId' | 'coverLetter'>;
 

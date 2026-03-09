@@ -6,13 +6,14 @@ import { ApplicationRepository } from '../repositories/application.repository.js
 import { ClientRepository } from '../repositories/client.repository.js';
 import { JobRepository } from '../repositories/job.repository.js';
 
-const createSchema = z.object({
-  clientId: z.number().int().positive(),
-  coverLetter: z.string().min(1),
-});
-
 const updateSchema = z.object({
   status: z.enum(['pending', 'accepted', 'rejected']),
+});
+
+const createSchema = z.object({
+  name: z.string().min(1),
+  email: z.email(),
+  coverLetter: z.string().min(1),
 });
 
 async function requireJob(jobId: number) {
@@ -31,26 +32,13 @@ export const applicationsRoute = new Hono()
     return c.json(rows);
   })
 
-  .get('/:id', async (c) => {
-    const jobId = Number(c.req.param('jobId'));
-    const id = Number(c.req.param('id'));
-    await requireJob(jobId);
-    const row = await ApplicationRepository.findById(id, jobId);
-    if (!row) {
-      throw new HTTPException(404, { message: 'Application not found' });
-    }
-    return c.json(row);
-  })
-
   .post('/', zValidator('json', createSchema), async (c) => {
     const jobId = Number(c.req.param('jobId'));
     await requireJob(jobId);
-    const { clientId, coverLetter } = c.req.valid('json');
-    const client = await ClientRepository.findById(clientId);
-    if (!client) {
-      throw new HTTPException(404, { message: 'Client not found' });
-    }
-    const row = await ApplicationRepository.create({ jobId, clientId, coverLetter });
+    const { name, email, coverLetter } = c.req.valid('json');
+    let client = await ClientRepository.findByEmail(email);
+    client ??= await ClientRepository.create({ name, email });
+    const row = await ApplicationRepository.create({ jobId, clientId: client.id, coverLetter });
     return c.json(row, 201);
   })
 
@@ -65,6 +53,17 @@ export const applicationsRoute = new Hono()
     }
     if (status === 'accepted') {
       await JobRepository.update(jobId, job.companyId, { status: 'filled' });
+    }
+    return c.json(row);
+  })
+
+  .get('/:id', async (c) => {
+    const jobId = Number(c.req.param('jobId'));
+    const id = Number(c.req.param('id'));
+    await requireJob(jobId);
+    const row = await ApplicationRepository.findById(id, jobId);
+    if (!row) {
+      throw new HTTPException(404, { message: 'Application not found' });
     }
     return c.json(row);
   });

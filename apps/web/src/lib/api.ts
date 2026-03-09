@@ -65,6 +65,11 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ name }),
       }),
+    update: (id: number, name: string) =>
+      apiFetch<Company>(`/api/companies/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ name }),
+      }),
   },
 
   jobs: {
@@ -75,6 +80,11 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(data),
       }),
+    updateStatus: (companyId: number, id: number, status: Job['status']) =>
+      apiFetch<Job>(`/api/companies/${companyId}/jobs/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status }),
+      }),
   },
 
   clients: {
@@ -84,7 +94,7 @@ export const api = {
 
   applications: {
     list: (jobId: number) => apiFetch<Application[]>(`/api/jobs/${jobId}/applications`),
-    create: (jobId: number, data: { clientId: number; coverLetter: string }) =>
+    create: (jobId: number, data: { name: string; email: string; coverLetter: string }) =>
       apiFetch<Application>(`/api/jobs/${jobId}/applications`, {
         method: 'POST',
         body: JSON.stringify(data),

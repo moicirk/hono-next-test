@@ -42,12 +42,4 @@ export const JobRepository = {
       .returning();
     return row;
   },
-
-  async delete(id: number, companyId: number): Promise<boolean> {
-    const [row] = await db
-      .delete(jobs)
-      .where(and(eq(jobs.id, id), eq(jobs.companyId, companyId)))
-      .returning();
-    return !!row;
-  },
 };

@@ -41,13 +41,4 @@ export const companiesRoute = new Hono()
       throw new HTTPException(404, { message: 'Company not found' });
     }
     return c.json(row);
-  })
-
-  .delete('/:id', async (c) => {
-    const id = Number(c.req.param('id'));
-    const ok = await CompanyRepository.delete(id);
-    if (!ok) {
-      throw new HTTPException(404, { message: 'Company not found' });
-    }
-    return c.json({ success: true });
   });

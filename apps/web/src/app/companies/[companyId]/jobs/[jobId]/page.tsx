@@ -1,4 +1,5 @@
 import { ApplicationsList } from '@/components/applications-list';
+import { JobStatusButton } from '@/components/status-job-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/api';
@@ -19,10 +20,19 @@ export default async function JobDetailPage({ params }: { params: Promise<{ comp
 
   return (
     <main className='mx-auto max-w-4xl px-4 py-10'>
-      <div className='mb-6'>
+      <div className='mb-6 flex items-center justify-between'>
         <Button asChild variant='outline' size='sm'>
           <Link href={`/companies/${companyId}/jobs`}>&larr; Back to {company.name} Jobs</Link>
         </Button>
+        {job.status === 'open' && (
+          <JobStatusButton companyId={Number(companyId)} jobId={Number(jobId)} targetStatus='in_review' />
+        )}
+        {job.status === 'in_review' && (
+          <JobStatusButton companyId={Number(companyId)} jobId={Number(jobId)} targetStatus='open' />
+        )}
+        {job.status === 'filled' && (
+          <JobStatusButton companyId={Number(companyId)} jobId={Number(jobId)} targetStatus='closed' />
+        )}
       </div>
 
       <Card className='mb-10'>
@@ -51,11 +61,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ comp
           Applications <span className='text-muted-foreground text-base font-normal'>({applications.length})</span>
         </h2>
 
-        {applications.length === 0 ? (
-          <p className='text-muted-foreground text-sm'>No applications yet.</p>
-        ) : (
-          <ApplicationsList initialApplications={applications} jobId={Number(jobId)} />
-        )}
+        <ApplicationsList initialApplications={applications} jobId={Number(jobId)} jobStatus={job.status} />
       </section>
     </main>
   );

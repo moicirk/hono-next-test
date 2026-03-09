@@ -68,15 +68,4 @@ export const jobsRoute = new Hono()
       throw new HTTPException(404, { message: 'Job not found' });
     }
     return c.json(row);
-  })
-
-  .delete('/:id', async (c) => {
-    const companyId = Number(c.req.param('companyId'));
-    const id = Number(c.req.param('id'));
-    await requireCompany(companyId);
-    const ok = await JobRepository.delete(id, companyId);
-    if (!ok) {
-      throw new HTTPException(404, { message: 'Job not found' });
-    }
-    return c.json({ success: true });
   });

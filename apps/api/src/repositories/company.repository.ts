@@ -26,9 +26,4 @@ export const CompanyRepository = {
       .returning();
     return row;
   },
-
-  async delete(id: number): Promise<boolean> {
-    const [row] = await db.delete(companies).where(eq(companies.id, id)).returning();
-    return !!row;
-  },
 };
