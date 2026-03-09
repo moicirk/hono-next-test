@@ -65,7 +65,7 @@ const insertedJobs = await db
         'Create compelling animations and motion graphics for our product and marketing materials. You will collaborate with the brand team and work in Figma, After Effects, and Lottie.',
       priceFrom: 2500,
       priceTo: 4000,
-      status: 'in_review',
+      status: 'open',
     },
 
     // CloudSys
@@ -94,7 +94,7 @@ const insertedJobs = await db
         'Own the reliability and scalability of our platform. You will build observability tooling, manage on-call rotations, and work with engineering teams to define and meet SLO targets.',
       priceFrom: 5500,
       priceTo: 8000,
-      status: 'filled',
+      status: 'open',
     },
 
     // QualitySoft
@@ -114,15 +114,15 @@ const insertedJobs = await db
         'Build and maintain automated test suites for our web and mobile products. You will work with Playwright and Cypress, integrate tests into CI pipelines, and help drive a culture of quality across the team.',
       priceFrom: 3000,
       priceTo: 4500,
-      status: 'draft',
+      status: 'open',
     },
   ])
   .returning();
 
 const [
   seniorFrontend,
-  backendEngineer,
-  engManager,
+  backendEngineer, // engineeringManager — draft, no applications
+  ,
   uxDesigner,
   motionDesigner,
   devops,
@@ -213,29 +213,6 @@ await db.insert(applications).values([
     status: 'pending',
     coverLetter:
       'I transitioned from frontend to backend two years ago and have since focused on Node.js microservices. I am keen to deepen my expertise in a dedicated backend role.',
-  },
-
-  // Engineering Manager — 3 applications
-  {
-    jobId: engManager.id,
-    clientId: sarah.id,
-    status: 'pending',
-    coverLetter:
-      'I have managed engineering teams of up to 10 people across three product cycles. I believe strong 1:1s and clear roadmaps are the foundation of high-performing teams.',
-  },
-  {
-    jobId: engManager.id,
-    clientId: robert.id,
-    status: 'pending',
-    coverLetter:
-      'After six years as a software engineer, I moved into management and have been leading a team of eight for two years. I am looking for a new challenge at a growing company.',
-  },
-  {
-    jobId: engManager.id,
-    clientId: james.id,
-    status: 'pending',
-    coverLetter:
-      'I have experience bridging product and engineering, defining technical strategy, and holding teams accountable to delivery timelines without sacrificing quality.',
   },
 
   // UX/UI Designer — 4 applications

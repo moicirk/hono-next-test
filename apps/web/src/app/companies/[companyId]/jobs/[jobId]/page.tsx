@@ -1,4 +1,4 @@
-import { ApplicationCard } from '@/components/application-card';
+import { ApplicationsList } from '@/components/applications-list';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/api';
@@ -54,11 +54,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ comp
         {applications.length === 0 ? (
           <p className='text-muted-foreground text-sm'>No applications yet.</p>
         ) : (
-          <div className='flex flex-col gap-4'>
-            {applications.map((app) => (
-              <ApplicationCard key={app.id} application={app} jobId={Number(jobId)} />
-            ))}
-          </div>
+          <ApplicationsList initialApplications={applications} jobId={Number(jobId)} />
         )}
       </section>
     </main>

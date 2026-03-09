@@ -57,11 +57,14 @@ export const applicationsRoute = new Hono()
   .patch('/:id', zValidator('json', updateSchema), async (c) => {
     const jobId = Number(c.req.param('jobId'));
     const id = Number(c.req.param('id'));
-    await requireJob(jobId);
+    const job = await requireJob(jobId);
     const { status } = c.req.valid('json');
     const row = await ApplicationRepository.updateStatus(id, jobId, status);
     if (!row) {
       throw new HTTPException(404, { message: 'Application not found' });
+    }
+    if (status === 'accepted') {
+      await JobRepository.update(jobId, job.companyId, { status: 'filled' });
     }
     return c.json(row);
   });

@@ -16,16 +16,25 @@ const STATUS_STYLES: Record<Application['status'], string> = {
   rejected: 'text-red-600 bg-red-50 border-red-200',
 };
 
-export function ApplicationCard({ application, jobId }: { application: Application; jobId: number }) {
-  const [status, setStatus] = useState<Application['status']>(application.status);
+export function ApplicationCard({
+  application,
+  jobId,
+  onStatusChange,
+  disabled = false,
+}: {
+  application: Application;
+  jobId: number;
+  onStatusChange: (status: Application['status']) => void;
+  disabled?: boolean;
+}) {
   const [saving, setSaving] = useState(false);
 
   async function handleStatusChange(next: Application['status']) {
-    if (next === status) return;
+    if (next === application.status) return;
     setSaving(true);
     try {
       await api.applications.updateStatus(jobId, application.id, next);
-      setStatus(next);
+      onStatusChange(next);
     } finally {
       setSaving(false);
     }
@@ -41,10 +50,10 @@ export function ApplicationCard({ application, jobId }: { application: Applicati
           </div>
           <div className='flex flex-col items-end gap-1.5'>
             <select
-              value={status}
-              disabled={saving}
+              value={application.status}
+              disabled={saving || disabled}
               onChange={(e) => handleStatusChange(e.target.value as Application['status'])}
-              className={`rounded-md border px-2 py-1 text-xs font-medium focus:outline-none disabled:opacity-50 ${STATUS_STYLES[status]}`}
+              className={`rounded-md border px-2 py-1 text-xs font-medium focus:outline-none disabled:opacity-50 ${STATUS_STYLES[application.status]}`}
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
