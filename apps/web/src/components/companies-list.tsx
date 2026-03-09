@@ -2,27 +2,34 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { type Company } from '@/lib/data';
+import { type Company, api } from '@/lib/api';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function CompaniesList({ initialCompanies }: { initialCompanies: Company[] }) {
-  const [companies, setCompanies] = useState(initialCompanies);
+  const router = useRouter();
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  function handleAdd(e: React.FormEvent) {
+  async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-    const newCompany: Company = { id: `c${Date.now()}`, name: trimmed };
-    setCompanies((prev) => [...prev, newCompany]);
-    setName('');
+    setLoading(true);
+    try {
+      await api.companies.create(trimmed);
+      setName('');
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex flex-col gap-3'>
-        {companies.map((company) => (
+        {initialCompanies.map((company) => (
           <Card key={company.id} className='transition-shadow hover:shadow-md'>
             <CardContent className='flex items-center justify-between py-4'>
               <span className='font-medium'>{company.name}</span>
@@ -40,9 +47,12 @@ export function CompaniesList({ initialCompanies }: { initialCompanies: Company[
           placeholder='Company name'
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className='border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex-1 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+          disabled={loading}
+          className='border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex-1 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50'
         />
-        <Button type='submit'>Add Company</Button>
+        <Button type='submit' disabled={loading}>
+          {loading ? 'Adding...' : 'Add Company'}
+        </Button>
       </form>
     </div>
   );

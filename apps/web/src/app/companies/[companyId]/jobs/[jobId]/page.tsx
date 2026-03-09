@@ -1,19 +1,21 @@
+import { ApplicationCard } from '@/components/application-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { applications, companies, jobs } from '@/lib/data';
+import { api } from '@/lib/api';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default async function JobDetailPage({ params }: { params: Promise<{ companyId: string; jobId: string }> }) {
   const { companyId, jobId } = await params;
-  const company = companies.find((c) => c.id === companyId);
-  const job = jobs.find((j) => j.id === jobId && j.companyId === companyId);
 
-  if (!company || !job) {
-    notFound();
-  }
+  const [company, job] = await Promise.all([
+    api.companies.get(Number(companyId)).catch(() => null),
+    api.jobs.get(Number(companyId), Number(jobId)).catch(() => null),
+  ]);
 
-  const jobApplications = applications.filter((a) => a.jobId === jobId);
+  if (!company || !job) notFound();
+
+  const applications = await api.applications.list(Number(jobId)).catch(() => []);
 
   return (
     <main className='mx-auto max-w-4xl px-4 py-10'>
@@ -28,12 +30,12 @@ export default async function JobDetailPage({ params }: { params: Promise<{ comp
           <div className='flex items-start justify-between gap-4'>
             <div>
               <CardTitle className='text-2xl'>{job.title}</CardTitle>
-              <p className='text-muted-foreground mt-1 text-sm'>{job.position}</p>
+              <p className='text-muted-foreground mt-1 text-sm capitalize'>{job.status.replace('_', ' ')}</p>
             </div>
             <div className='text-right'>
               <p className='text-muted-foreground text-xs tracking-wide uppercase'>Salary</p>
               <p className='text-lg font-semibold'>
-                ${job.salaryFrom.toLocaleString()} &ndash; ${job.salaryTo.toLocaleString()}
+                ${job.priceFrom.toLocaleString()} &ndash; ${job.priceTo.toLocaleString()}
               </p>
             </div>
           </div>
@@ -46,32 +48,15 @@ export default async function JobDetailPage({ params }: { params: Promise<{ comp
 
       <section>
         <h2 className='mb-4 text-xl font-bold'>
-          Applications <span className='text-muted-foreground text-base font-normal'>({jobApplications.length})</span>
+          Applications <span className='text-muted-foreground text-base font-normal'>({applications.length})</span>
         </h2>
 
-        {jobApplications.length === 0 ? (
+        {applications.length === 0 ? (
           <p className='text-muted-foreground text-sm'>No applications yet.</p>
         ) : (
           <div className='flex flex-col gap-4'>
-            {jobApplications.map((app) => (
-              <Card key={app.id}>
-                <CardHeader>
-                  <div className='flex items-center justify-between'>
-                    <CardTitle className='text-base'>{app.name}</CardTitle>
-                    <span className='text-muted-foreground text-sm'>
-                      {new Date(app.date).toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </span>
-                  </div>
-                  <p className='text-muted-foreground text-sm'>{app.phone}</p>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-sm leading-relaxed'>{app.coverLetter}</p>
-                </CardContent>
-              </Card>
+            {applications.map((app) => (
+              <ApplicationCard key={app.id} application={app} jobId={Number(jobId)} />
             ))}
           </div>
         )}

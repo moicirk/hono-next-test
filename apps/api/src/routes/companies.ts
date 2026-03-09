@@ -21,7 +21,9 @@ export const companiesRoute = new Hono()
   .get('/:id', async (c) => {
     const id = Number(c.req.param('id'));
     const row = await CompanyRepository.findById(id);
-    if (!row) {throw new HTTPException(404, { message: 'Company not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Company not found' });
+    }
     return c.json(row);
   })
 
@@ -35,13 +37,17 @@ export const companiesRoute = new Hono()
     const id = Number(c.req.param('id'));
     const { name } = c.req.valid('json');
     const row = await CompanyRepository.update(id, { name });
-    if (!row) {throw new HTTPException(404, { message: 'Company not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Company not found' });
+    }
     return c.json(row);
   })
 
   .delete('/:id', async (c) => {
     const id = Number(c.req.param('id'));
     const ok = await CompanyRepository.delete(id);
-    if (!ok) {throw new HTTPException(404, { message: 'Company not found' });}
+    if (!ok) {
+      throw new HTTPException(404, { message: 'Company not found' });
+    }
     return c.json({ success: true });
   });

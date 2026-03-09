@@ -25,7 +25,9 @@ const updateSchema = z.object({
 
 async function requireCompany(companyId: number) {
   const company = await CompanyRepository.findById(companyId);
-  if (!company) {throw new HTTPException(404, { message: 'Company not found' });}
+  if (!company) {
+    throw new HTTPException(404, { message: 'Company not found' });
+  }
   return company;
 }
 
@@ -42,7 +44,9 @@ export const jobsRoute = new Hono()
     const id = Number(c.req.param('id'));
     await requireCompany(companyId);
     const row = await JobRepository.findByIdAndCompany(id, companyId);
-    if (!row) {throw new HTTPException(404, { message: 'Job not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Job not found' });
+    }
     return c.json(row);
   })
 
@@ -60,7 +64,9 @@ export const jobsRoute = new Hono()
     await requireCompany(companyId);
     const body = c.req.valid('json');
     const row = await JobRepository.update(id, companyId, body);
-    if (!row) {throw new HTTPException(404, { message: 'Job not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Job not found' });
+    }
     return c.json(row);
   })
 
@@ -69,6 +75,8 @@ export const jobsRoute = new Hono()
     const id = Number(c.req.param('id'));
     await requireCompany(companyId);
     const ok = await JobRepository.delete(id, companyId);
-    if (!ok) {throw new HTTPException(404, { message: 'Job not found' });}
+    if (!ok) {
+      throw new HTTPException(404, { message: 'Job not found' });
+    }
     return c.json({ success: true });
   });

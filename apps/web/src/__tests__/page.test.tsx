@@ -6,7 +6,7 @@ describe('Home Page', () => {
     render(<Home />);
 
     const headingElement = screen.getByRole('heading', {
-      name: /Next.js \+ Hono Start/i,
+      name: /Job Board/i,
       level: 1,
     });
 

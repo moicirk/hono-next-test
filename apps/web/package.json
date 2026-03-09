@@ -20,7 +20,8 @@
     "next": "^16.1.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
@@ -36,6 +37,7 @@
     "eslint": "^9.39.3",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
+    "happy-dom": "^20.8.3",
     "jsdom": "^28.1.0",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.2.0",

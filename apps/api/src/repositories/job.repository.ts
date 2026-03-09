@@ -1,11 +1,19 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns, sql } from 'drizzle-orm';
 import { db } from '../db/index.js';
-import { jobs } from '../db/schema.js';
-import type { Job, NewJob, UpdateJob } from '../models/job.model.js';
+import { applications, jobs } from '../db/schema.js';
+import type { Job, JobWithCount, NewJob, UpdateJob } from '../models/job.model.js';
 
 export const JobRepository = {
-  findAllByCompany(companyId: number): Promise<Job[]> {
-    return db.select().from(jobs).where(eq(jobs.companyId, companyId));
+  findAllByCompany(companyId: number): Promise<JobWithCount[]> {
+    return db
+      .select({
+        ...getTableColumns(jobs),
+        applicationCount: sql<number>`count(${applications.id})`.as('applicationCount'),
+      })
+      .from(jobs)
+      .leftJoin(applications, eq(applications.jobId, jobs.id))
+      .where(eq(jobs.companyId, companyId))
+      .groupBy(jobs.id);
   },
 
   async findById(id: number): Promise<Job | null> {

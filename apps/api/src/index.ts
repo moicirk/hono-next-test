@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { applicationsRoute } from './routes/applications.js';
+import { clientsRoute } from './routes/clients.js';
 import { companiesRoute } from './routes/companies.js';
 import { jobsRoute } from './routes/jobs.js';
 
@@ -18,7 +19,8 @@ const app = new Hono()
   )
   .route('/api/companies', companiesRoute)
   .route('/api/companies/:companyId/jobs', jobsRoute)
-  .route('/api/jobs/:jobId/applications', applicationsRoute);
+  .route('/api/jobs/:jobId/applications', applicationsRoute)
+  .route('/api/clients', clientsRoute);
 
 if (process.env.NODE_ENV !== 'test') {
   const port = Number(process.env.PORT) || 8000;

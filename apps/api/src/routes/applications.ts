@@ -17,7 +17,9 @@ const updateSchema = z.object({
 
 async function requireJob(jobId: number) {
   const job = await JobRepository.findById(jobId);
-  if (!job) {throw new HTTPException(404, { message: 'Job not found' });}
+  if (!job) {
+    throw new HTTPException(404, { message: 'Job not found' });
+  }
   return job;
 }
 
@@ -34,7 +36,9 @@ export const applicationsRoute = new Hono()
     const id = Number(c.req.param('id'));
     await requireJob(jobId);
     const row = await ApplicationRepository.findById(id, jobId);
-    if (!row) {throw new HTTPException(404, { message: 'Application not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Application not found' });
+    }
     return c.json(row);
   })
 
@@ -43,7 +47,9 @@ export const applicationsRoute = new Hono()
     await requireJob(jobId);
     const { clientId, coverLetter } = c.req.valid('json');
     const client = await ClientRepository.findById(clientId);
-    if (!client) {throw new HTTPException(404, { message: 'Client not found' });}
+    if (!client) {
+      throw new HTTPException(404, { message: 'Client not found' });
+    }
     const row = await ApplicationRepository.create({ jobId, clientId, coverLetter });
     return c.json(row, 201);
   })
@@ -54,6 +60,8 @@ export const applicationsRoute = new Hono()
     await requireJob(jobId);
     const { status } = c.req.valid('json');
     const row = await ApplicationRepository.updateStatus(id, jobId, status);
-    if (!row) {throw new HTTPException(404, { message: 'Application not found' });}
+    if (!row) {
+      throw new HTTPException(404, { message: 'Application not found' });
+    }
     return c.json(row);
   });

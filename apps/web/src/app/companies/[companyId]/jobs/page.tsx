@@ -1,18 +1,18 @@
 import { JobsList } from '@/components/jobs-list';
 import { Button } from '@/components/ui/button';
-import { companies, jobs } from '@/lib/data';
+import { api } from '@/lib/api';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default async function CompanyJobsPage({ params }: { params: Promise<{ companyId: string }> }) {
   const { companyId } = await params;
-  const company = companies.find((c) => c.id === companyId);
 
-  if (!company) {
-    notFound();
-  }
+  const [company, jobs] = await Promise.all([
+    api.companies.get(Number(companyId)).catch(() => null),
+    api.jobs.list(Number(companyId)).catch(() => []),
+  ]);
 
-  const companyJobs = jobs.filter((j) => j.companyId === companyId);
+  if (!company) notFound();
 
   return (
     <main className='mx-auto max-w-4xl px-4 py-10'>
@@ -24,10 +24,10 @@ export default async function CompanyJobsPage({ params }: { params: Promise<{ co
 
       <h1 className='mb-2 text-3xl font-bold'>{company.name}</h1>
       <p className='text-muted-foreground mb-8'>
-        {companyJobs.length} open {companyJobs.length === 1 ? 'position' : 'positions'}
+        {jobs.length} open {jobs.length === 1 ? 'position' : 'positions'}
       </p>
 
-      <JobsList jobs={companyJobs} companyId={companyId} />
+      <JobsList jobs={jobs} companyId={companyId} />
 
       <div className='mt-8'>
         <Button asChild variant='outline'>
