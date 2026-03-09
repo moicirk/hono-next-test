@@ -1,10 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
 import { CompanyService } from '../services/company.service.js';
-
-const createSchema = z.object({ name: z.string().min(1) });
-const updateSchema = z.object({ name: z.string().min(1) });
+import { createCompanyValidator, updateCompanyValidator } from '../validation/company.validation.js';
 
 export const companiesRoute = new Hono()
   .get('/', async (c) => {
@@ -15,12 +12,12 @@ export const companiesRoute = new Hono()
     return c.json(await CompanyService.findById(Number(c.req.param('id'))));
   })
 
-  .post('/', zValidator('json', createSchema), async (c) => {
+  .post('/', zValidator('json', createCompanyValidator), async (c) => {
     const { name } = c.req.valid('json');
     return c.json(await CompanyService.create(name), 201);
   })
 
-  .patch('/:id', zValidator('json', updateSchema), async (c) => {
+  .patch('/:id', zValidator('json', updateCompanyValidator), async (c) => {
     const { name } = c.req.valid('json');
     return c.json(await CompanyService.update(Number(c.req.param('id')), name));
   });
