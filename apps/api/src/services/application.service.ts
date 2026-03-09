@@ -1,3 +1,4 @@
+import { ForbiddenException } from '../exceptions/forbidden.exception.js';
 import { NotFoundException } from '../exceptions/not-found.exception.js';
 import type { ApplicationStatus, ApplicationWithClient } from '../models/application.model.js';
 import { ApplicationRepository } from '../repositories/application.repository.js';
@@ -31,7 +32,10 @@ export const ApplicationService = {
     jobId: number,
     data: { name: string; email: string; coverLetter: string },
   ): Promise<ApplicationWithClient> {
-    await requireJob(jobId);
+    const job = await requireJob(jobId);
+    if (job.status !== 'open') {
+      throw new ForbiddenException('Applications can only be submitted for open jobs');
+    }
     let client = await ClientRepository.findByEmail(data.email);
     client ??= await ClientRepository.create({ name: data.name, email: data.email });
     return ApplicationRepository.create({ jobId, clientId: client.id, coverLetter: data.coverLetter });
